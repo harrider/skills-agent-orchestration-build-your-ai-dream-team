@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project Pulse</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="dashboard">
+    <header class="dashboard-header">
+      <h1>Project Pulse</h1>
+      <p>Track active project health, priority, and recent team momentum in one place.</p>
+    </header>
+
+    <main>
+      <section class="projects-grid" id="projects-grid" aria-label="Projects">
+        <p>Loading project updates...</p>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var projectsGrid = document.getElementById("projects-grid");
+      var validStatuses = ["on-track", "at-risk", "off-track", "blocked", "complete"];
+      var validPriorities = ["low", "medium", "high", "critical"];
+
+      function friendlyLabel(value) {
+        if (typeof value !== "string" || value.length === 0) {
+          return "Unknown";
+        }
+
+        return value
+          .split("-")
+          .map(function (part, index) {
+            if (index === 0) {
+              return part.charAt(0).toUpperCase() + part.slice(1);
+            }
+
+            return part;
+          })
+          .join(" ");
+      }
+
+      function normalizeValue(value, allowedValues, fallbackValue) {
+        if (allowedValues.indexOf(value) !== -1) {
+          return value;
+        }
+
+        return fallbackValue;
+      }
+
+      function createMetaItem(label, value) {
+        var item = document.createElement("span");
+        item.textContent = label + ": " + value;
+        return item;
+      }
+
+      function createProjectCard(project) {
+        var name = project.name || "Untitled project";
+        var owner = project.owner || "Unassigned";
+        var status = normalizeValue(project.status, validStatuses, "blocked");
+        var statusLabel = friendlyLabel(status);
+        var priority = normalizeValue(project.priority, validPriorities, "medium");
+        var priorityLabel = friendlyLabel(priority);
+        var recentActivity = project.recentActivity || "No recent activity reported.";
+
+        var article = document.createElement("article");
+        article.className = "project-card";
+
+        var header = document.createElement("div");
+        header.className = "project-card__header";
+
+        var titleGroup = document.createElement("div");
+
+        var heading = document.createElement("h2");
+        heading.className = "project-card__name";
+        heading.textContent = name;
+
+        var ownerElement = document.createElement("p");
+        ownerElement.className = "project-card__owner";
+        ownerElement.textContent = "Owner: " + owner;
+
+        titleGroup.appendChild(heading);
+        titleGroup.appendChild(ownerElement);
+
+        var statusElement = document.createElement("span");
+        statusElement.className = "project-card__status project-card__status--" + status;
+        statusElement.setAttribute("role", "status");
+        statusElement.setAttribute("aria-label", "Project status: " + statusLabel);
+        statusElement.textContent = statusLabel;
+
+        header.appendChild(titleGroup);
+        header.appendChild(statusElement);
+
+        var activityElement = document.createElement("p");
+        activityElement.className = "project-card__activity";
+        activityElement.textContent = recentActivity;
+
+        var meta = document.createElement("div");
+        meta.className = "project-card__meta";
+
+        var ownerMeta = createMetaItem("Owner", owner);
+
+        var priorityElement = document.createElement("span");
+        priorityElement.className = "project-card__priority project-card__priority--" + priority;
+        priorityElement.textContent = "Priority: " + priorityLabel;
+
+        var statusMeta = createMetaItem("Status", statusLabel);
+
+        meta.appendChild(ownerMeta);
+        meta.appendChild(priorityElement);
+        meta.appendChild(statusMeta);
+
+        article.appendChild(header);
+        article.appendChild(activityElement);
+        article.appendChild(meta);
+
+        return article;
+      }
+
+      function renderProjects(projects) {
+        projectsGrid.textContent = "";
+
+        if (!Array.isArray(projects) || projects.length === 0) {
+          var emptyMessage = document.createElement("p");
+          emptyMessage.textContent = "No projects are available right now.";
+          projectsGrid.appendChild(emptyMessage);
+          return;
+        }
+
+        projects.forEach(function (project) {
+          projectsGrid.appendChild(createProjectCard(project));
+        });
+      }
+
+      function renderError() {
+        projectsGrid.textContent = "";
+        var errorMessage = document.createElement("p");
+        errorMessage.setAttribute("role", "alert");
+        errorMessage.textContent = "Project data could not be loaded. Please refresh the dashboard or try again later.";
+        projectsGrid.appendChild(errorMessage);
+      }
+
+      fetch("./project-data.json")
+        .then(function (response) {
+          if (!response.ok) {
+            throw new Error("Unable to load project-data.json");
+          }
+
+          return response.json();
+        })
+        .then(function (data) {
+          renderProjects(data.projects);
+        })
+        .catch(function () {
+          renderError();
+        });
+    });
+  </script>
+</body>
+</html>

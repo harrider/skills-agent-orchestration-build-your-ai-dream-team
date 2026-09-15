@@ -1,0 +1,59 @@
+{
+  "generatedAt": "2026-09-15T21:23:02.681Z",
+  "projects": [
+    {
+      "id": "pulse-redesign",
+      "name": "Pulse Redesign",
+      "owner": "Maya Chen",
+      "status": "on-track",
+      "recentActivity": "Completed stakeholder review and queued final dashboard polish on 2026-09-14.",
+      "priority": "high",
+      "summary": "Refresh the executive dashboard experience for portfolio reviews."
+    },
+    {
+      "id": "data-pipeline-hardening",
+      "name": "Data Pipeline Hardening",
+      "owner": "Owen Brooks",
+      "status": "at-risk",
+      "recentActivity": "Found intermittent ingestion delays during the nightly validation run.",
+      "priority": "critical",
+      "summary": "Improve reliability across project telemetry ingestion jobs."
+    },
+    {
+      "id": "mobile-beta",
+      "name": "Mobile Beta",
+      "owner": "Sofia Patel",
+      "status": "blocked",
+      "recentActivity": "Waiting for app store entitlement approval before the beta can expand.",
+      "priority": "medium",
+      "summary": "Release the first mobile companion beta to internal pilot users."
+    },
+    {
+      "id": "customer-insights",
+      "name": "Customer Insights Portal",
+      "owner": "Liam Rivera",
+      "status": "complete",
+      "recentActivity": "Published launch notes and transferred ownership to customer success.",
+      "priority": "low",
+      "summary": "Deliver a self-service reporting portal for strategic accounts."
+    },
+    {
+      "id": "security-remediation",
+      "name": "Security Remediation Sprint",
+      "owner": "Noah Williams",
+      "status": "off-track",
+      "recentActivity": "Two dependency upgrades failed regression testing and need revised fixes.",
+      "priority": "critical",
+      "summary": "Close outstanding dependency and configuration findings."
+    },
+    {
+      "id": "automation-playbooks",
+      "name": "Automation Playbooks",
+      "owner": "Ava Thompson",
+      "status": "on-track",
+      "recentActivity": "Merged the first five reusable deployment playbooks into the team library.",
+      "priority": "medium",
+      "summary": "Standardize repeatable delivery workflows for project teams."
+    }
+  ]
+}
